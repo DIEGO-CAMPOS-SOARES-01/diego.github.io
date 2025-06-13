@@ -6,42 +6,63 @@
   <title>Para Meu Amor</title>
   <style>
     /* Reset e estilo base */
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:100%; height:100%; overflow:hidden; }
-    body {
-      /* Fundo degradê suave, sem imagem externa */
-      background: linear-gradient(135deg, #ff9a9e 0%, #ffc3a0 100%);
-      font-family: sans-serif;
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    /* Canvas sobrepostos */
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Fundo em degradê suave, sem nenhuma imagem */
+      background: linear-gradient(135deg, #ffe6f2 0%, #fff0f5 100%);
+    }
+    /* Canvases fixos sobrepostos */
     canvas {
-      position: fixed; top:0; left:0;
-      width:100vw; height:100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       pointer-events: none;
     }
-    /* Container central */
+    /* Caixa branca central */
     .container {
-      position: relative; z-index:2;
-      max-width:600px; width:90%; padding:30px;
-      background: rgba(255,255,255,0.85);
-      border-radius:16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      width: 90%;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       text-align: center;
     }
     .container h1 {
-      font-size:2.5rem; color:#d6336c;
-      margin-bottom:20px;
+      font-size: 2.5rem;
+      color: #d6336c;
+      margin-bottom: 20px;
     }
     .container p {
-      font-size:1.1rem; color:#333;
-      line-height:1.5;
+      font-size: 1.1rem;
+      color: #333;
+      line-height: 1.5;
     }
-    @media (max-width:480px) {
-      .container { padding:20px; }
-      .container h1 { font-size:2rem; }
-      .container p { font-size:1rem; }
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      .container h1 {
+        font-size: 2rem;
+      }
+      .container p {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -57,22 +78,28 @@
     </p>
   </div>
   <script>
-    // Referências de canvas
-    const heartC = document.getElementById('heartCanvas'), heartCtx = heartC.getContext('2d');
-    const sparkleC = document.getElementById('sparkleCanvas'), sparkleCtx = sparkleC.getContext('2d');
+    // Referências de canvas e contextos
+    const heartC = document.getElementById('heartCanvas');
+    const heartCtx = heartC.getContext('2d');
+    const sparkleC = document.getElementById('sparkleCanvas');
+    const sparkleCtx = sparkleC.getContext('2d');
+
     function resize() {
-      [heartC, sparkleC].forEach(c => { c.width = window.innerWidth; c.height = window.innerHeight; });
+      [heartC, sparkleC].forEach(c => {
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      });
     }
     window.addEventListener('resize', resize);
     resize();
 
-    // Criação de corações
+    // Animação de corações
     let hearts = [];
     function createHeart() {
       return {
         x: Math.random() * heartC.width,
-        y: heartC.height + 10,
-        size: Math.random() * 20 + 10,
+        y: heartC.height + 20,
+        size: Math.random() * 25 + 10,
         speed: Math.random() * 1 + 0.5,
         opacity: Math.random() * 0.5 + 0.5
       };
@@ -83,16 +110,16 @@
       heartCtx.fillStyle = '#d6336c';
       heartCtx.beginPath();
       heartCtx.moveTo(h.x, h.y);
-      heartCtx.bezierCurveTo(h.x, h.y - h.size/2, h.x - h.size, h.y - h.size/2, h.x - h.size, h.y);
-      heartCtx.bezierCurveTo(h.x - h.size, h.y + h.size, h.x, h.y + h.size*1.5, h.x, h.y + h.size*2);
-      heartCtx.bezierCurveTo(h.x, h.y + h.size*1.5, h.x + h.size, h.y + h.size, h.x + h.size, h.y);
-      heartCtx.bezierCurveTo(h.x + h.size, h.y - h.size/2, h.x, h.y - h.size/2, h.x, h.y);
+      heartCtx.bezierCurveTo(h.x, h.y - h.size / 2, h.x - h.size, h.y - h.size / 2, h.x - h.size, h.y);
+      heartCtx.bezierCurveTo(h.x - h.size, h.y + h.size, h.x, h.y + h.size * 1.5, h.x, h.y + h.size * 2);
+      heartCtx.bezierCurveTo(h.x, h.y + h.size * 1.5, h.x + h.size, h.y + h.size, h.x + h.size, h.y);
+      heartCtx.bezierCurveTo(h.x + h.size, h.y - h.size / 2, h.x, h.y - h.size / 2, h.x, h.y);
       heartCtx.closePath();
       heartCtx.fill();
       heartCtx.restore();
     }
 
-    // Criação de brilhos
+    // Animação de brilhos
     let sparkles = [];
     function createSparkle() {
       return {
@@ -100,7 +127,7 @@
         y: Math.random() * sparkleC.height,
         size: Math.random() * 3 + 1,
         opacity: Math.random(),
-        fade: Math.random() * 0.015 + 0.005
+        fade: Math.random() * 0.02 + 0.005
       };
     }
     function drawSparkle(s) {
@@ -113,10 +140,9 @@
       sparkleCtx.restore();
     }
 
-    // Loop de animação
     function animate() {
-      heartCtx.clearRect(0,0,heartC.width,heartC.height);
-      sparkleCtx.clearRect(0,0,sparkleC.width,sparkleC.height);
+      heartCtx.clearRect(0, 0, heartC.width, heartC.height);
+      sparkleCtx.clearRect(0, 0, sparkleC.width, sparkleC.height);
 
       if (hearts.length < 60 && Math.random() < 0.1) hearts.push(createHeart());
       hearts = hearts.filter(h => {
