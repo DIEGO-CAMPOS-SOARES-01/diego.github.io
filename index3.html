@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Meu Amor</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* Reset e variáveis */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%; width: 100%; overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://i.imgur.com/8J6e3rG.jpg') no-repeat center/cover;
+      position: relative;
+    }
+    /* Overlay suave */
+    body::before {
+      content: '';
+      position: absolute; top:0; left:0;
+      width:100%; height:100%;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.2), rgba(214,51,108,0.3));
+      z-index:0;
+      pointer-events:none;
+    }
+    /* Canvas de corações */
+    canvas {
+      position: fixed; top:0; left:0;
+      width:100vw; height:100vh;
+      z-index:1; pointer-events:none; display:block;
+    }
+    /* Centralizar container */
+    body {
+      display: flex; align-items: center; justify-content: center;
+    }
+    /* Container decorado */
+    .container {
+      position: relative; z-index:2;
+      max-width:600px; width:90%; padding:50px;
+      background: rgba(255,255,255,0.85);
+      border: 6px solid rgba(214,51,108,0.8);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(214,51,108,0.5);
+      text-align: center;
+      overflow: hidden;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    /* Borda decorativa com pseudo-elemento */
+    .container::after {
+      content: '💖';
+      position: absolute;
+      top: -10px; right: -10px;
+      font-size: 3rem;
+      opacity:0.3;
+      animation: floatCorner 5s ease-in-out infinite;
+    }
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3rem; color: #d6336c;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      animation: shimmer 2s infinite;
+    }
+    #mensagem {
+      font-size: 1.2rem; color: #333;
+      line-height: 1.6; white-space: pre-wrap;
+      margin-bottom: 10px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 20px rgba(214,51,108,0.5); }
+      50% { box-shadow: 0 0 40px rgba(214,51,108,0.8); }
+    }
+    @keyframes floatCorner {
+      0%,100% { transform: translate(0,0) rotate(0deg); }
+      50% { transform: translate(-10px,10px) rotate(20deg); }
+    }
+    @keyframes shimmer {
+      0% { text-shadow: -2px 0 2px rgba(255,255,255,0.8); }
+      50% { text-shadow: 2px 0 2px rgba(255,255,255,0.8); }
+      100% { text-shadow: -2px 0 2px rgba(255,255,255,0.8); }
+    }
+    @media (max-width:480px) {
+      .container { padding:30px; }
+      h1 { font-size:2.5rem; }
+      #mensagem { font-size:1rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="heartsCanvas"></canvas>
+  <div class="container">
+    <h1>Para Meu Amor</h1>
+    <div id="mensagem">
+      Oi, meu amor! 💖
+      Você é a razão do meu sorriso todos os dias.
+      Te amo mais do que palavras podem dizer.
+    </div>
+  </div>
+  <script>
+    // Canvas resize e contexto
+    const canvas = document.getElementById('heartsCanvas');
+    const ctx = canvas.getContext('2d');
+    function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    // Corações animados
+    let hearts = [];
+    function createHeart(){ return { x: Math.random()*canvas.width, y: canvas.height+20, size: Math.random()*30+20, speed: Math.random()*1.5+1, opacity: Math.random()*0.5+0.5 }; }
+    function drawHeart(h){ ctx.save(); ctx.globalAlpha = h.opacity; ctx.fillStyle = '#d6336c'; ctx.beginPath(); const x=h.x, y=h.y, s=h.size; ctx.moveTo(x,y); ctx.bezierCurveTo(x,y-s/2,x-s,y-s/2,x-s,y); ctx.bezierCurveTo(x-s,y+s,x,y+s*1.5,x,y+s*2); ctx.bezierCurveTo(x,y+s*1.5,x+s,y+s,x+s,y); ctx.bezierCurveTo(x+s,y-s/2,x,y-s/2,x,y); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    function animate(){ ctx.clearRect(0,0,canvas.width,canvas.height); if(hearts.length<80&&Math.random()<0.1) hearts.push(createHeart()); hearts=hearts.filter(h=>{ h.y-=h.speed; h.opacity-=0.002; if(h.opacity<=0) return false; drawHeart(h); return true; }); requestAnimationFrame(animate); }
+    animate();
+  </script>
+</body>
+</html>

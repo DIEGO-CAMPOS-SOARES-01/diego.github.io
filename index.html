@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Meu Amor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('https://i.imgur.com/8J6e3rG.jpg') no-repeat center/cover;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      z-index: 1;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    h1 {
+      font-family: 'Brush Script MT', cursive;
+      font-size: 2.8rem;
+      color: #d6336c;
+      margin-bottom: 20px;
+    }
+    #mensagem {
+      font-size: 1.3rem;
+      color: #444;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="heartsCanvas"></canvas>
+  <div class="container">
+    <h1>Para Meu Amor</h1>
+    <div id="mensagem">
+      Oi, meu amor! 💖\n
+      Você é a razão do meu sorriso todos os dias.\n
+      Te amo mais do que palavras podem dizer.
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('heartsCanvas');
+    const ctx = canvas.getContext('2d');
+    let hearts = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function createHeart() {
+      return {
+        x: Math.random() * canvas.width,
+        y: canvas.height + 10,
+        size: Math.random() * 20 + 10,
+        speed: Math.random() * 1 + 0.5,
+        opacity: Math.random() * 0.5 + 0.5
+      };
+    }
+
+    function drawHeart(h) {
+      ctx.save();
+      ctx.globalAlpha = h.opacity;
+      ctx.fillStyle = '#d6336c';
+      ctx.beginPath();
+      ctx.moveTo(h.x, h.y);
+      ctx.bezierCurveTo(h.x, h.y - h.size / 2, h.x - h.size, h.y - h.size / 2, h.x - h.size, h.y);
+      ctx.bezierCurveTo(h.x - h.size, h.y + h.size, h.x, h.y + h.size * 1.5, h.x, h.y + h.size * 2);
+      ctx.bezierCurveTo(h.x, h.y + h.size * 1.5, h.x + h.size, h.y + h.size, h.x + h.size, h.y);
+      ctx.bezierCurveTo(h.x + h.size, h.y - h.size / 2, h.x, h.y - h.size / 2, h.x, h.y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (hearts.length < 50 && Math.random() < 0.1) hearts.push(createHeart());
+
+      hearts = hearts.filter(h => {
+        h.y -= h.speed;
+        h.opacity -= 0.002;
+        if (h.opacity <= 0) return false;
+        drawHeart(h);
+        return true;
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

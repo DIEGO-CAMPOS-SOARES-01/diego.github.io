@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Meu Amor</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%; width: 100%; overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://i.imgur.com/8J6e3rG.jpg') no-repeat center/cover;
+      position: relative;
+    }
+    /* Gradient overlay */
+    body::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(to bottom right, rgba(255,255,255,0.3), rgba(214,51,108,0.3));
+      pointer-events: none;
+      z-index: 0;
+    }
+    canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: block; pointer-events: none;
+      z-index: 1;
+    }
+    /* Center container with flexbox */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      position: relative; z-index: 2;
+      max-width: 600px; width: 90%; padding: 40px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: fadeIn 1s ease-out;
+    }
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3rem; color: #d6336c;
+      margin-bottom: 20px;
+    }
+    #mensagem {
+      font-size: 1.2rem; color: #333;
+      line-height: 1.6; white-space: pre-wrap;
+    }
+    @media (max-width: 480px) {
+      .container { padding: 20px; }
+      h1 { font-size: 2.5rem; }
+      #mensagem { font-size: 1rem; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="heartsCanvas"></canvas>
+  <div class="container">
+    <h1>Para Meu Amor</h1>
+    <div id="mensagem">
+      Oi, meu amor! 💖
+      Você é a razão do meu sorriso todos os dias.
+      Te amo mais do que palavras podem dizer.
+    </div>
+  </div>
+  <!-- Hearts Animation Script -->
+  <script>
+    const canvas = document.getElementById('heartsCanvas');
+    const ctx = canvas.getContext('2d');
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    let hearts = [];
+    function createHeart() {
+      return { x: Math.random()*canvas.width, y: canvas.height+20, size: Math.random()*25+15, speed: Math.random()*1.2+0.8, opacity: Math.random()*0.5+0.5 };
+    }
+    function drawHeart(h) {
+      ctx.save(); ctx.globalAlpha = h.opacity; ctx.fillStyle = '#d6336c'; ctx.beginPath();
+      const x=h.x, y=h.y, s=h.size;
+      ctx.moveTo(x,y);
+      ctx.bezierCurveTo(x,y-s/2, x-s, y-s/2, x-s, y);
+      ctx.bezierCurveTo(x-s, y+s, x, y+s*1.5, x, y+s*2);
+      ctx.bezierCurveTo(x, y+s*1.5, x+s, y+s, x+s, y);
+      ctx.bezierCurveTo(x+s, y-s/2, x, y-s/2, x, y);
+      ctx.closePath(); ctx.fill(); ctx.restore();
+    }
+    function animate() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      if (hearts.length<60 && Math.random()<0.08) hearts.push(createHeart());
+      hearts = hearts.filter(h => { h.y-=h.speed; h.opacity-=0.003; if(h.opacity<=0) return false; drawHeart(h); return true; });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
